@@ -1,0 +1,13 @@
+{
+  "name": "mymy-marketplace",
+  "owner": {
+    "name": "gemiso"
+  },
+  "plugins": [
+    {
+      "name": "mymy-mcp-plugin",
+      "source": "./",
+      "description": "MYMY MCP 연동 플러그인 — 브라우저 핸드오프 자동 인증 + MYMY MCP 도구 투명 프록시."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "//": "대상 서버 = localhost dev. koba 운영으로 바꾸려면 아래 env 를 MYMY_BASE_URL=http://koba-mymy.gemiso.com / MYMY_WEB_URL=http://koba-mymy.gemiso.com 으로 교체. (JSON 은 // 라인주석 미지원 → 표준 \"//\" 키로 대체)",
+  "mcpServers": {
+    "mymy": {
+      "command": "uv",
+      "args": ["run", "--directory", "${CLAUDE_PLUGIN_ROOT}", "python", "-m", "mymy_mcp.server"],
+      "env": {
+        "MYMY_BASE_URL": "http://localhost:4000",
+        "MYMY_WEB_URL": "http://localhost:3000"
+      }
+    }
+  }
+}

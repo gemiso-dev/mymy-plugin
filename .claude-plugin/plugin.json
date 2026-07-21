@@ -1,0 +1,8 @@
+{
+  "name": "mymy-mcp-plugin",
+  "description": "MYMY 연동 — 브라우저 핸드오프 자동 인증으로 MYMY MCP 도구(검색·콘텐츠 조회 등)를 Claude Code/Desktop에서 사용. /mymy-login 1회 실행 후 지속.",
+  "version": "0.1.0",
+  "author": {
+    "name": "gemiso"
+  }
+}
