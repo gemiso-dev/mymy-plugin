@@ -25,11 +25,15 @@ Claude Code / Claude Desktop 에서 **MYMY MCP 도구**(검색·콘텐츠 조회
 
 ## 설정
 
-`.mcp.json` 의 `env` 에서 대상 서버를 지정한다(기본 dev):
+`.mcp.json` 의 `env` 는 **최초(로그인 전) fallback 서버**를 정한다(기본 dev):
 
 ```json
 "env": { "MYMY_BASE_URL": "https://<배포도메인>", "MYMY_WEB_URL": "https://<배포도메인>" }
 ```
+
+로그인 후에는 여러 MYMY 서버를 오갈 수 있다 — `mymy_login("local")` / `mymy_login("koba")` /
+`mymy_login("https://<도메인>")`, 또는 인자 없이 호출해 선택지를 받아 고른다. 이미 로그인한
+인스턴스로는 재로그인 없이 즉시 전환되고, active 인스턴스가 env 보다 우선한다.
 
 ### Claude Code
 

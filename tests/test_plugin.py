@@ -65,6 +65,35 @@ def test_mymauth_no_token_no_header(monkeypatch):
     assert "Authorization" not in sent.headers
 
 
-def test_current_base_url_env_precedence(monkeypatch):
+def test_current_base_url_env_fallback_when_no_active(monkeypatch):
+    # active 부재 → env 로 폴백
+    monkeypatch.setattr(tokens, "get_active", lambda: None)
     monkeypatch.setenv("MYMY_BASE_URL", "https://mymy.example.com/")
     assert client.current_base_url() == "https://mymy.example.com"
+
+
+def test_current_base_url_active_precedes_env(monkeypatch):
+    # active 인스턴스가 env 보다 우선 (전환이 실효를 가지려면)
+    monkeypatch.setattr(tokens, "get_active", lambda: "http://koba-mymy.gemiso.com")
+    monkeypatch.setenv("MYMY_BASE_URL", "https://mymy.example.com")
+    assert client.current_base_url() == "http://koba-mymy.gemiso.com"
+
+
+def test_current_base_url_dev_default(monkeypatch):
+    monkeypatch.setattr(tokens, "get_active", lambda: None)
+    monkeypatch.delenv("MYMY_BASE_URL", raising=False)
+    assert client.current_base_url() == "http://localhost:4000"
+
+
+def test_transport_url_follows_active(tmp_path, monkeypatch):
+    # 동적 프록시의 척추: make_transport() 는 매 호출 active 인스턴스로 URL 을 만든다.
+    # active 를 바꾸면 다음 transport 가 그 서버를 향한다(프로세스 재시작 없이 전환).
+    cred = tmp_path / "credentials.json"
+    monkeypatch.setattr(tokens, "_cred_path", lambda: cred)
+    monkeypatch.delenv("MYMY_BASE_URL", raising=False)
+
+    tokens.save_instance("http://localhost:4000", "mym_l", "http://localhost:3000", "local")
+    assert client.make_transport().url == "http://localhost:4000/api/mcp"
+
+    tokens.set_active("http://koba-mymy.gemiso.com")
+    assert client.make_transport().url == "http://koba-mymy.gemiso.com/api/mcp"

@@ -18,8 +18,12 @@ from . import tokens
 
 
 def current_base_url() -> str:
-    """API base_url — 환경변수 > 저장된 base_url > dev 기본."""
-    base = os.environ.get("MYMY_BASE_URL") or tokens.load_base_url() or "http://localhost:4000"
+    """API base_url — active 인스턴스 > env 시드 > dev 기본.
+
+    active 가 env 보다 우선해야 login 도구의 인스턴스 전환이 실효를 가진다.
+    env(MYMY_BASE_URL)는 최초 로그인 전(active 부재) fallback 으로만 남는다.
+    """
+    base = tokens.get_active() or os.environ.get("MYMY_BASE_URL") or "http://localhost:4000"
     return base.rstrip("/")
 
 
