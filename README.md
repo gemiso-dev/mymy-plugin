@@ -1,8 +1,7 @@
 # mymy-mcp-plugin
 
-> **위치**: mymy-v4 레포 내부 `tools/mcp-plugin/` (현재 **내부 전용**). `tools/` 는 npm 워크스페이스
-> 밖이라 turbo/`npm ci` 에 영향을 주지 않는다. 외부 배포가 필요해지면 이 폴더를 `git subtree split`
-> 으로 별도 공개 레포/마켓플레이스로 분리한다(자체 완결 구조 유지).
+> **위치**: 독립 레포 `gemiso-dev/mymy-plugin` (Python/uv, 자체 완결 구조). Claude Code 플러그인
+> 마켓플레이스로 등록하거나 Claude Desktop 에 stdio MCP 서버로 직접 등록해 사용한다.
 
 Claude Code / Claude Desktop 에서 **MYMY MCP 도구**(검색·콘텐츠 조회 등)를 쓰기 위한 플러그인.
 관리 UI에서 `mym_` 토큰을 수기로 복사하는 대신, **`/mymy-login` 한 번**이면 브라우저가 열리고
@@ -37,7 +36,14 @@ Claude Code / Claude Desktop 에서 **MYMY MCP 도구**(검색·콘텐츠 조회
 
 ### Claude Code
 
-플러그인으로 등록하면 `.mcp.json` 이 자동 적용된다. 등록 후 `/mymy-login` 실행.
+마켓플레이스로 등록 후 설치한다:
+
+```bash
+/plugin marketplace add gemiso-dev/mymy-plugin
+/plugin install mymy-mcp-plugin@mymy-marketplace
+```
+
+설치하면 `.mcp.json` 이 자동 적용된다. 이후 `/mymy-login` 실행.
 
 ### Claude Desktop
 
@@ -48,7 +54,7 @@ Claude Code / Claude Desktop 에서 **MYMY MCP 도구**(검색·콘텐츠 조회
   "mcpServers": {
     "mymy": {
       "command": "uv",
-      "args": ["run", "--directory", "<mymy-v4 절대경로>/tools/mcp-plugin", "python", "-m", "mymy_mcp.server"],
+      "args": ["run", "--directory", "<mymy-plugin 클론 절대경로>", "python", "-m", "mymy_mcp.server"],
       "env": { "MYMY_BASE_URL": "https://<배포도메인>", "MYMY_WEB_URL": "https://<배포도메인>" }
     }
   }
