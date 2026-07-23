@@ -8,8 +8,10 @@ from __future__ import annotations
 
 # koba 는 회사가 참여한 전시회(KOBA show) 명칭이며 고객사명이 아님 → 하드코딩 허용.
 # koba 는 http (https 아님). base_url == web_url (운영 단일 도메인).
+# local: dev(API 4000 / web 3000 분리). docker: 도커 통합 스택(API·web 동일 오리진 8088).
 PRESETS: list[dict] = [
     {"name": "local", "base_url": "http://localhost:4000", "web_url": "http://localhost:3000"},
+    {"name": "docker", "base_url": "http://localhost:8088", "web_url": "http://localhost:8088"},
     {"name": "koba", "base_url": "http://koba-mymy.gemiso.com", "web_url": "http://koba-mymy.gemiso.com"},
 ]
 

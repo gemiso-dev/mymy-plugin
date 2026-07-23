@@ -1,11 +1,11 @@
 ---
 description: MYMY 브라우저 핸드오프 인증/재인증 (대상 인스턴스 선택/전환)
-argument-hint: "[프리셋명(local/koba) | URL] (생략 시 선택지 제시)"
+argument-hint: "[프리셋명(local/docker/koba) | URL] (생략 시 선택지 제시)"
 ---
 
 `mymy_login` 도구를 호출해 MYMY 인증을 실행하세요. 인자로 대상을 넘길 수 있습니다: `$ARGUMENTS`
 
-- **인자가 있으면**: 프리셋명(`local`/`koba`) 또는 URL 로 `mymy_login("<값>")` 을 호출하세요.
+- **인자가 있으면**: 프리셋명(`local`/`docker`/`koba`) 또는 URL 로 `mymy_login("<값>")` 을 호출하세요.
   - 이미 로그인한 인스턴스면 브라우저 없이 즉시 전환됩니다(`switched: true`).
   - 처음 보는 URL 은 브라우저를 열기 전에 MYMY 서버인지 자동 검증(`/llms.txt` 프로브)합니다.
 - **인자가 없으면**: 먼저 인자 없이 `mymy_login()` 을 호출해 **선택지 목록**을 받고,

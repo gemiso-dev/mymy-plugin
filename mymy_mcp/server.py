@@ -37,7 +37,7 @@ def mymy_login(target: str | None = None, force: bool = False) -> dict:
 
     - 인자 없이 호출: 연결 가능한 인스턴스 선택지를 반환한다(브라우저를 열지 않음).
       사용자에게 어디로 연결할지 물어본 뒤, 고른 값으로 `mymy_login("<이름 또는 URL>")` 재호출.
-    - `target` = 프리셋명(local/koba) 또는 이미 로그인한 base_url + 유효 토큰:
+    - `target` = 프리셋명(local/docker/koba) 또는 이미 로그인한 base_url + 유효 토큰:
       브라우저 없이 active 만 전환한다(cached).
     - `target` = 신규 URL / 토큰 없음 / `force=True`: 브라우저 창이 열리면 MYMY 웹에
       로그인(이미 로그인 상태면 생략) 후 '연결 허용'을 누른다. 발급된 토큰은

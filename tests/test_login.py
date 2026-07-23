@@ -39,7 +39,16 @@ def test_no_arg_returns_choices(isolate):
     assert out["needs_selection"] is True
     assert isolate["handoff"] == []  # 브라우저 안 엶
     names = {c["name"] for c in out["choices"]}
-    assert {"local", "koba"} <= names
+    assert {"local", "docker", "koba"} <= names
+
+
+def test_docker_preset_single_origin(isolate):
+    # docker 프리셋은 단일 오리진(base == web == :8088)
+    out = login_mod.login("docker")
+    assert out["logged_in"] is True
+    assert out["base_url"] == "http://localhost:8088"
+    assert isolate["handoff"] == ["http://localhost:8088"]  # web == base
+    assert isolate["probe"] == []  # 프리셋은 프로브 생략
 
 
 def test_choices_reflect_active_and_authenticated(isolate):

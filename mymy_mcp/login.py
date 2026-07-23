@@ -55,7 +55,7 @@ def build_choices() -> dict:
         "active": active,
         "choices": choices,
         "hint": (
-            "연결할 인스턴스를 고르세요. 프리셋명(local/koba) 또는 URL 로 "
+            "연결할 인스턴스를 고르세요. 프리셋명(local/docker/koba) 또는 URL 로 "
             "mymy_login 을 다시 호출하세요."
         ),
     }
@@ -117,7 +117,7 @@ def login(target: str | None = None, force: bool = False) -> dict:
         return {
             "error": "invalid_url",
             "target": target,
-            "message": "http/https URL 또는 프리셋명(local/koba)이어야 합니다.",
+            "message": "http/https URL 또는 프리셋명(local/docker/koba)이어야 합니다.",
         }
     if not probe_mymy(base):
         return {
