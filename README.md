@@ -12,10 +12,12 @@ Claude Code / Claude Desktop 에서 **MYMY MCP 도구**(검색·콘텐츠 조회
 
 ## 요구 사항
 
+클론·빌드용이 아니라 **실행·인증에 필요한 항목**이다(마켓플레이스로 설치해도 동일).
+
 | 항목 | 설명 |
 |------|------|
-| **[uv](https://docs.astral.sh/uv/)** | Python 3.13+ 런타임 (플러그인 서버 실행) |
-| **Google Chrome** | 브라우저 핸드오프 인증 창 |
+| **[uv](https://docs.astral.sh/uv/)** | Python 3.13+ 런타임. Claude Code 가 플러그인 서버를 `uv run` 으로 실행하므로 필수 |
+| **Google Chrome** | 핸드오프 인증 창 (권장 — 없으면 기본 브라우저로 폴백) |
 | **MYMY 계정** | `mcp.access` 그룹 권한 (관리자에게 요청) |
 
 ---
@@ -71,6 +73,14 @@ Claude Code 안에서 아래 두 줄만 실행하면 된다. **레포를 클론�
 - `mymy_login("local")` / `mymy_login("docker")` / `mymy_login("koba")` / `mymy_login("https://<도메인>")`
 - 인자 없이 호출하면 선택지(프리셋 ∪ 이미 로그인한 인스턴스)를 받아 고른다.
 - 이미 로그인한 인스턴스로는 재로그인 없이 즉시 전환된다(active 포인터만 이동).
+
+기본 프리셋:
+
+| 프리셋 | API (base_url) | Web (web_url) | 용도 |
+|--------|----------------|----------------|------|
+| `local` | `http://localhost:4000` | `http://localhost:3000` | 로컬 dev (API·web 분리 실행) |
+| `docker` | `http://localhost:8088` | `http://localhost:8088` | 도커 통합 스택 (API·web 동일 오리진) |
+| `koba` | `http://koba-mymy.gemiso.com` | `http://koba-mymy.gemiso.com` | 운영 단일 도메인 (http) |
 
 프리셋에 없는 커스텀 서버는 최초 1회 URL 을 직접 넣어 로그인하면 이후 기억되어 선택지에 뜬다.
 
