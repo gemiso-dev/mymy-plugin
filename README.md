@@ -137,22 +137,63 @@ Claude Code 안에서 아래 두 줄만 실행하면 된다. **레포를 클론�
 
 ## Claude Desktop (플러그인 마켓플레이스 미지원, 대안)
 
-Claude Desktop 은 플러그인 마켓플레이스를 지원하지 않으므로, 공개 레포에서 **클론 없이** uvx 로
-직접 실행하도록 등록한다. `claude_desktop_config.json`:
+Claude Desktop 은 플러그인 마켓플레이스를 지원하지 않으므로 MCP 서버를 직접 등록한다.
+
+### 1단계 — 한 번만 설치
+
+git 이 정상 동작하는 일반 터미널/PowerShell 에서 실행한다(clone/build 를 미리 끝내둔다):
+
+```powershell
+uv tool install --from git+https://github.com/gemiso-dev/mymy-plugin.git mymy-mcp
+```
+
+`mymy-mcp` 실행파일이 uv 도구 경로(`~/.local/bin`)에 설치되고, uv 가 이 폴더를 PATH 에 등록한다.
+
+### 2단계 — Claude Desktop 설정 열기
+
+1. Claude Desktop 실행 → 좌측 상단 메뉴(또는 앱 설정)에서 **Settings(설정)** 열기.
+2. **Developer(개발자)** 탭 선택 → **Edit Config(설정 편집)** 버튼 클릭.
+3. `claude_desktop_config.json` 이 있는 폴더가 탐색기로 열린다. 그 파일을 메모장 등으로 연다.
+   - 직접 찾아갈 경우 경로: `%APPDATA%\Claude\claude_desktop_config.json`
+     (탐색기 주소창에 `%APPDATA%\Claude` 붙여넣으면 바로 이동. 파일이 없으면 새로 만든다.)
+
+### 3단계 — 설정 붙여넣기
+
+파일이 비어 있으면(또는 새로 만들었으면) 아래를 **그대로 복붙**한다:
 
 ```json
 {
   "mcpServers": {
     "mymy": {
-      "command": "uvx",
-      "args": ["--from", "git+https://github.com/gemiso-dev/mymy-plugin.git", "mymy-mcp"]
+      "command": "mymy-mcp"
     }
   }
 }
 ```
 
-앱 재시작 후 "+" 메뉴의 `mymy_login` 프롬프트로 인증한다. 최신 버전 반영은 앱 재시작으로 이뤄지며,
-캐시가 갱신되지 않으면 `args` 에 `"--refresh"` 를 추가한다.
+이미 다른 MCP 서버가 등록돼 있으면 `mcpServers` 안에 `"mymy": { ... }` 부분만 추가한다
+(앞 항목 끝의 콤마 `,` 주의):
+
+```json
+{
+  "mcpServers": {
+    "다른서버": { ... },
+    "mymy": {
+      "command": "mymy-mcp"
+    }
+  }
+}
+```
+
+### 4단계 — 재시작 후 로그인
+
+1. Claude Desktop 을 **완전히 종료**한다 — 창만 닫지 말고 트레이 아이콘(우측 하단) 우클릭 → **Quit(종료)**.
+2. 다시 실행하면 `mymy` 서버가 뜬다.
+3. 채팅창 **"+" 메뉴 → `mymy_login`** 프롬프트로 인증한다.
+
+- **업데이트**: `uv tool upgrade mymy-mcp` (git 되는 일반 터미널에서 1회).
+- 재시작 후에도 `mymy-mcp` 를 못 찾으면(드물게 Desktop 이 `~/.local/bin` 을 PATH 에서 못 볼 때),
+  `uv tool install` 출력에 찍힌 `mymy-mcp` 실행파일 전체 경로를 `command` 에 넣는다.
 
 ---
 
