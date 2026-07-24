@@ -65,15 +65,15 @@ def test_mymauth_no_token_no_header(monkeypatch):
     assert "Authorization" not in sent.headers
 
 
-def test_current_base_url_env_fallback_when_no_active(monkeypatch):
-    # active 부재 → env 로 폴백
+def test_current_base_url_ignores_env(monkeypatch):
+    # env 는 더 이상 대상 결정에 관여하지 않는다 — active 부재 시 dev 기본으로 폴백
     monkeypatch.setattr(tokens, "get_active", lambda: None)
     monkeypatch.setenv("MYMY_BASE_URL", "https://mymy.example.com/")
-    assert client.current_base_url() == "https://mymy.example.com"
+    assert client.current_base_url() == "http://localhost:4000"
 
 
-def test_current_base_url_active_precedes_env(monkeypatch):
-    # active 인스턴스가 env 보다 우선 (전환이 실효를 가지려면)
+def test_current_base_url_active_wins_over_env(monkeypatch):
+    # active 인스턴스가 대상 — env 를 세팅해도 무시된다
     monkeypatch.setattr(tokens, "get_active", lambda: "http://koba-mymy.gemiso.com")
     monkeypatch.setenv("MYMY_BASE_URL", "https://mymy.example.com")
     assert client.current_base_url() == "http://koba-mymy.gemiso.com"

@@ -1,13 +1,9 @@
 {
-  "//": "최초(로그인 전) fallback 서버 = localhost dev. 로그인 후에는 mymy_login 인자(local/koba/URL)로 런타임 전환하며 active 인스턴스가 env 보다 우선하므로, 여러 서버를 오갈 거면 env 를 바꿀 필요 없다. env 를 굳이 고정하려면 MYMY_BASE_URL/MYMY_WEB_URL 을 교체. (JSON 은 // 라인주석 미지원 → 표준 \"//\" 키로 대체)",
+  "//": "연결 대상은 /mymy-login 인자(프리셋 local/docker/koba 또는 URL)로 정한다. 로그인 전 fallback 은 코드 기본(localhost dev)이며, env 로 서버를 지정하지 않는다.",
   "mcpServers": {
     "mymy": {
       "command": "uv",
-      "args": ["run", "--directory", "${CLAUDE_PLUGIN_ROOT}", "python", "-m", "mymy_mcp.server"],
-      "env": {
-        "MYMY_BASE_URL": "http://localhost:4000",
-        "MYMY_WEB_URL": "http://localhost:3000"
-      }
+      "args": ["run", "--directory", "${CLAUDE_PLUGIN_ROOT}", "python", "-m", "mymy_mcp.server"]
     }
   }
 }

@@ -71,7 +71,7 @@ def _migrate_v1(data: dict) -> dict:
     if not access or not base:
         return _empty_v2()
     base = _normalize(base)
-    web = os.environ.get("MYMY_WEB_URL") or base
+    web = base  # v1 은 web_url 을 저장하지 않았으므로 base 로 폴백(로그인 후 재핸드오프 시 갱신)
     return {
         "version": 2,
         "active": base,

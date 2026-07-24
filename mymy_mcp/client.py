@@ -8,7 +8,6 @@ StreamableHttpTransport는 생성 시점에 헤더가 고정되지만, httpx.Aut
 
 from __future__ import annotations
 
-import os
 from collections.abc import Generator
 
 import httpx
@@ -18,13 +17,13 @@ from . import tokens
 
 
 def current_base_url() -> str:
-    """API base_url — active 인스턴스 > env 시드 > dev 기본.
+    """API base_url — active 인스턴스 > dev 기본.
 
-    active 가 env 보다 우선해야 login 도구의 인스턴스 전환이 실효를 가진다.
-    env(MYMY_BASE_URL)는 최초 로그인 전(active 부재) fallback 으로만 남는다.
+    로그인(active 인스턴스)이 아직 없으면 dev 기본으로 폴백한다. 이 상태의 도구
+    호출은 토큰이 없어 401 이 되고, 상위(server.py)가 재로그인을 안내한다.
+    대상 서버는 env 가 아니라 mymy_login 인자(프리셋/URL)로 결정된다.
     """
-    base = tokens.get_active() or os.environ.get("MYMY_BASE_URL") or "http://localhost:4000"
-    return base.rstrip("/")
+    return (tokens.get_active() or "http://localhost:4000").rstrip("/")
 
 
 class MymAuth(httpx.Auth):

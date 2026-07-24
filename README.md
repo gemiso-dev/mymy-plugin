@@ -24,15 +24,12 @@ Claude Code / Claude Desktop 에서 **MYMY MCP 도구**(검색·콘텐츠 조회
 
 ## 설정
 
-`.mcp.json` 의 `env` 는 **최초(로그인 전) fallback 서버**를 정한다(기본 dev):
+**연결 대상은 `/mymy-login` 으로 정한다 — 별도 env 설정이 없다.** 최초부터 프리셋/URL 을
+골라 연결하며, 로그인 전 fallback 은 코드 기본(localhost dev)이다.
 
-```json
-"env": { "MYMY_BASE_URL": "https://<배포도메인>", "MYMY_WEB_URL": "https://<배포도메인>" }
-```
-
-로그인 후에는 여러 MYMY 서버를 오갈 수 있다 — `mymy_login("local")` / `mymy_login("koba")` /
-`mymy_login("https://<도메인>")`, 또는 인자 없이 호출해 선택지를 받아 고른다. 이미 로그인한
-인스턴스로는 재로그인 없이 즉시 전환되고, active 인스턴스가 env 보다 우선한다.
+- `mymy_login("local")` / `mymy_login("docker")` / `mymy_login("koba")` / `mymy_login("https://<도메인>")`
+- 인자 없이 호출하면 선택지(프리셋 ∪ 기억 인스턴스)를 받아 고른다.
+- 이미 로그인한 인스턴스로는 재로그인 없이 즉시 전환된다(active 포인터만 이동).
 
 ### Claude Code
 
@@ -54,8 +51,7 @@ Claude Code / Claude Desktop 에서 **MYMY MCP 도구**(검색·콘텐츠 조회
   "mcpServers": {
     "mymy": {
       "command": "uv",
-      "args": ["run", "--directory", "<mymy-plugin 클론 절대경로>", "python", "-m", "mymy_mcp.server"],
-      "env": { "MYMY_BASE_URL": "https://<배포도메인>", "MYMY_WEB_URL": "https://<배포도메인>" }
+      "args": ["run", "--directory", "<mymy-plugin 클론 절대경로>", "python", "-m", "mymy_mcp.server"]
     }
   }
 }

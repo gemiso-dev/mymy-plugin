@@ -83,7 +83,6 @@ def test_normalize_trailing_slash_same_key(tmp_path, monkeypatch):
 
 def test_migrate_v1_to_v2(tmp_path, monkeypatch):
     cred = _isolate(tmp_path, monkeypatch)
-    monkeypatch.setenv("MYMY_WEB_URL", "http://legacy-web:3000")
     cred.write_text(json.dumps({"access": "mym_old", "base_url": "http://legacy:4000"}), encoding="utf-8")
 
     # 읽기만 해도 메모리상 승격되어 노출
@@ -91,7 +90,7 @@ def test_migrate_v1_to_v2(tmp_path, monkeypatch):
     assert tokens.load_token() == "mym_old"
     inst = tokens.load_instance("http://legacy:4000")
     assert inst["access"] == "mym_old"
-    assert inst["web_url"] == "http://legacy-web:3000"  # env fallback
+    assert inst["web_url"] == "http://legacy:4000"  # base 폴백 (v1 은 web_url 미보관)
 
     # 명시적 승격 → 디스크가 v2 구조로 재기록
     assert tokens.migrate_v1_if_needed() is True

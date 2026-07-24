@@ -23,9 +23,9 @@ mymy_login("http://localhost:4000")    # base_url 로 직접 지정도 가능
 mymy_login("koba", force=true)         # 강제 재인증(플래그는 도구 직접 호출)
 ```
 
-> `.mcp.json` 의 env(`MYMY_BASE_URL`/`MYMY_WEB_URL`)는 **선택지(프리셋)가 아니라** 로그인 전
-> fallback 주소일 뿐입니다. 프리셋에 없는 커스텀 서버는 최초 1회 URL 을 직접 넣어 로그인하면
-> 이후 기억되어 선택지에 뜹니다.
+> 연결 대상은 env 가 아니라 이 도구의 인자로만 정해집니다. 프리셋에 없는 커스텀 서버는 최초
+> 1회 URL 을 직접 넣어 로그인하면 이후 기억되어 선택지에 뜹니다. (로그인 전 fallback 은 코드
+> 기본 localhost dev)
 
 브라우저 창이 열리면 MYMY 웹에 로그인(이미 로그인 상태면 생략) 후 "연결 허용"을 누릅니다.
 완료되면 인증 성공 여부와 `base_url` 을 보고하세요.
