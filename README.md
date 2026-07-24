@@ -86,6 +86,33 @@ Claude Code 안에서 아래 두 줄만 실행하면 된다. **레포를 클론�
 
 ---
 
+## 제공 도구
+
+플러그인은 도구를 재구현하지 않고 MYMY 서버의 `/api/mcp` 도구를 **투명 프록시**한다. 따라서
+아래 목록은 서버가 노출하는 도구이며, 서버에 도구가 추가되면 플러그인 수정 없이 그대로 늘어난다.
+각 도구는 **서버측 권한을 그대로 적용** — 토큰 사용자가 일반 화면에서 볼 수 있는 데이터만 나온다.
+
+| 도구 | 용도 |
+|------|------|
+| `search_contents` | AND/OR(BM25 전문 검색) 또는 AI(시맨틱/벡터) 모드로 콘텐츠 검색 |
+| `search_in_content` | 단일 콘텐츠 내 일치 위치(페이지/타임코드) 탐색 |
+| `list_contents` | 카테고리·정렬 기준 콘텐츠 목록 브라우즈 |
+| `list_categories` | 카테고리 트리 조회 / 이름·경로로 `categoryId` 찾기 |
+| `get_content` | 콘텐츠 단건 상세 메타데이터 + 파일 접근 URL |
+| `get_metadata_schema` | 활성 메타데이터 필드 정의(타입·필수·코드리스트 참조) 목록 |
+| `list_code_values` | 코드형 메타 필드(`fieldCode`)의 유효 코드값 조회 |
+| `update_content` | `fieldCode` 단위 메타데이터 수정 (PATCH — 지정 필드만, 카테고리 WRITE 권한) |
+| `get_content_persons` | 콘텐츠에 인식된 인물 목록 (경량, 페이지네이션) |
+| `get_person` | `personId` 로 인물 상세 바이오 조회 |
+| `get_content_analysis_prompt` | UMSL v1.2 분석 재료 준비 (VIDEO → CS-SSL / AUDIO → AS-SEL 분기) |
+| `attach_content_analysis` | UMSL v1.2 분석 결과(JSON)를 콘텐츠 `segment_info` 에 첨부 |
+| `submit_feedback` | 개선/버그 요청 제출 (서버측 로그 기록) |
+
+> 인증 도구 `mymy_login` (= `/mymy-login` 슬래시)은 프록시 대상이 아니라 이 플러그인이 제공하는
+> 로그인/전환용 도구다. 모든 도구 호출은 서버 감사 로그에 기록된다(`submit_feedback` 본문 제외).
+
+---
+
 ## 동작 방식
 
 1. `/mymy-login` → 로컬 `127.0.0.1` loopback 서버 기동 + Chrome 으로 `<web>/mcp-auth` 오픈.
