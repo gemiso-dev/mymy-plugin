@@ -16,8 +16,10 @@ Claude Code(플러그인 `.mcp.json`)와 Claude Desktop(`claude_desktop_config.j
 
 from __future__ import annotations
 
+import anyio
 from dotenv import load_dotenv
 from fastmcp import FastMCP
+from fastmcp.server.dependencies import get_context
 from fastmcp.server.providers.proxy import FastMCPProxy, ProxyClient
 
 from . import login as login_mod
@@ -32,7 +34,7 @@ mcp = FastMCP("mymy")
 
 
 @mcp.tool
-def mymy_login(target: str | None = None, force: bool = False) -> dict:
+async def mymy_login(target: str | None = None, force: bool = False) -> dict:
     """MYMY 인스턴스에 브라우저 핸드오프로 로그인하거나, 인증된 인스턴스로 전환한다.
 
     - 인자 없이 호출: 연결 가능한 인스턴스 선택지를 반환한다(브라우저를 열지 않음).
@@ -45,7 +47,20 @@ def mymy_login(target: str | None = None, force: bool = False) -> dict:
 
     신규 임의 URL 은 브라우저를 열기 전에 `GET <url>/llms.txt` 로 MYMY 서버인지 검증한다.
     """
-    return login_mod.login(target, force)
+    # login() 은 브라우저 핸드오프 등 블로킹 I/O 를 하므로 워커 스레드로 오프로드해
+    # 이벤트 루프(알림 송신 포함)를 막지 않는다.
+    result = await anyio.to_thread.run_sync(login_mod.login, target, force)
+    # 로그인/전환에 성공하면 active 인스턴스가 바뀌어 upstream(/api/mcp) 도구 카탈로그가
+    # 달라진다. 미인증 상태로 tools/list 를 캐시한 클라이언트(예: Claude Code CLI)가
+    # 재시작 없이 콘텐츠 도구를 받도록 tools/list_changed 를 통지한다.
+    # (FastMCP 는 tools.listChanged=True capability 를 광고하므로 클라이언트가 재조회한다.)
+    if result.get("switched") or result.get("logged_in"):
+        try:
+            await get_context().session.send_tool_list_changed()
+        except Exception:
+            # 통지 실패는 로그인 결과에 영향을 주지 않는다(클라이언트가 미지원일 수 있음).
+            pass
+    return result
 
 
 @mcp.prompt
